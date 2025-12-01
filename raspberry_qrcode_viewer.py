@@ -24,6 +24,10 @@ class QRCodeViewer(QtWidgets.QWidget):
         self.prensa_widgets = []
         self.current_index = 0
         self.completed_frames = set()
+        self.key_press_time = None
+        self.key_press_key = None
+        self.increment_timer = QtCore.QTimer()
+        self.increment_timer.timeout.connect(self.auto_increment)
         
         self.load_prensas()
         self.load_cabos()
@@ -340,8 +344,10 @@ class QRCodeViewer(QtWidgets.QWidget):
             self.atualizar_selecao()
     
     def keyPressEvent(self, event):
-        print(f"Tecla: {event.key()}")
+        if event.isAutoRepeat():
+            return
         
+        print(f"Tecla: {event.key()}")
         key = event.key()
         
         # Focus Input
@@ -354,6 +360,15 @@ class QRCodeViewer(QtWidgets.QWidget):
             if self.input_qr.hasFocus():
                 self.processar_qr_e_focar()
             return
+        
+        # Se input está focado, incrementa/decrementa dígitos
+        if self.input_qr.hasFocus():
+            if key in self.gamepad_keys.get('up', []) or key in self.gamepad_keys.get('down', []):
+                self.key_press_time = QtCore.QTime.currentTime()
+                self.key_press_key = key
+                self.increment_value(key, 1)
+                self.increment_timer.start(100)
+                return
         
         if not self.prensa_frames:
             return
@@ -374,6 +389,42 @@ class QRCodeViewer(QtWidgets.QWidget):
         # Left
         elif key in self.gamepad_keys.get('left', []):
             self.desmarcar_completo()
+    
+    def keyReleaseEvent(self, event):
+        if event.isAutoRepeat():
+            return
+        self.increment_timer.stop()
+        self.key_press_time = None
+        self.key_press_key = None
+    
+    def auto_increment(self):
+        if not self.key_press_time or not self.input_qr.hasFocus():
+            self.increment_timer.stop()
+            return
+        
+        elapsed = self.key_press_time.msecsTo(QtCore.QTime.currentTime())
+        
+        if elapsed >= 5000:
+            step = 100
+        elif elapsed >= 3000:
+            step = 10
+        else:
+            step = 1
+        
+        self.increment_value(self.key_press_key, step)
+    
+    def increment_value(self, key, step):
+        texto = self.input_qr.text()
+        if key in self.gamepad_keys.get('up', []):
+            if texto and texto.isdigit():
+                novo_valor = str(int(texto) + step)
+                self.input_qr.setText(novo_valor)
+            elif not texto:
+                self.input_qr.setText(str(step))
+        elif key in self.gamepad_keys.get('down', []):
+            if texto and texto.isdigit():
+                novo_valor = max(0, int(texto) - step)
+                self.input_qr.setText(str(novo_valor))
     
     def atualizar_selecao(self):
         for i, frame in enumerate(self.prensa_frames):
