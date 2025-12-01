@@ -345,12 +345,12 @@ class QRCodeViewer(QtWidgets.QWidget):
         key = event.key()
         
         # Focus Input
-        if key in [Qt.Key_Escape] + self.gamepad_keys.get('focus_input', []):
+        if key in self.gamepad_keys.get('focus_input', []):
             self.input_qr.setFocus()
             return
         
         # Enter
-        if key in [Qt.Key_Return, Qt.Key_Enter] + self.gamepad_keys.get('enter', []):
+        if key in self.gamepad_keys.get('enter', []):
             if self.input_qr.hasFocus():
                 self.processar_qr_e_focar()
             return
@@ -359,20 +359,20 @@ class QRCodeViewer(QtWidgets.QWidget):
             return
         
         # Down
-        if key in [Qt.Key_Down, Qt.Key_S, Qt.Key_VolumeDown, 16777238] + self.gamepad_keys.get('down', []):
+        if key in self.gamepad_keys.get('down', []):
             if self.current_index < len(self.prensa_frames) - 1:
                 self.current_index += 1
                 self.atualizar_selecao()
         # Up
-        elif key in [Qt.Key_Up, Qt.Key_W, Qt.Key_VolumeUp, 16777237] + self.gamepad_keys.get('up', []):
+        elif key in self.gamepad_keys.get('up', []):
             if self.current_index > 0:
                 self.current_index -= 1
                 self.atualizar_selecao()
         # Right
-        elif key in [Qt.Key_Right, Qt.Key_D, Qt.Key_Space, Qt.Key_MediaNext, 16777236] + self.gamepad_keys.get('right', []):
+        elif key in self.gamepad_keys.get('right', []):
             self.marcar_completo()
         # Left
-        elif key in [Qt.Key_Left, Qt.Key_A, Qt.Key_Backspace, Qt.Key_MediaPrevious, 16777234] + self.gamepad_keys.get('left', []):
+        elif key in self.gamepad_keys.get('left', []):
             self.desmarcar_completo()
     
     def atualizar_selecao(self):
