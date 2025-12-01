@@ -1,0 +1,305 @@
+{
+    "layout": {
+        "width": 650,
+        "height": 800
+    },
+    "prensas": [
+        {
+            "id": "P01",
+            "nome": "Prensa Manual 1",
+            "localizacao": "Setor de Prensas Manuais",
+            "terminais": [
+                "11235225",
+                "99200084",
+                "99200078"
+            ],
+            "width": 120,
+            "height": 70,
+            "pos_x": 5,
+            "pos_y": 5
+        },
+        {
+            "id": "P02",
+            "nome": "Prensa Manual 2",
+            "localizacao": "Setor de Prensas Manuais",
+            "terminais": [
+                "10918487",
+                "10918486",
+                "2013422"
+            ],
+            "width": 120,
+            "height": 70,
+            "pos_x": 4,
+            "pos_y": 578
+        },
+        {
+            "id": "P03",
+            "nome": "Prensa Manual 3",
+            "localizacao": "Setor de Prensas Manuais",
+            "terminais": [
+                "99200079",
+                "10020987",
+                "99200085"
+            ],
+            "width": 120,
+            "height": 70,
+            "pos_x": 1,
+            "pos_y": 149
+        },
+        {
+            "id": "P04",
+            "nome": "Prensa Manual 4",
+            "localizacao": "Setor de Prensas Manuais",
+            "terminal": "27200206",
+            "width": 120,
+            "height": 70,
+            "pos_x": 456,
+            "pos_y": 78,
+            "terminais": [
+                "99200976",
+                "98200403",
+                "99200441"
+            ]
+        },
+        {
+            "id": "P05",
+            "nome": "Prensa Manual 5",
+            "localizacao": "Setor de Prensas Manuais",
+            "terminal": "11724309",
+            "width": 120,
+            "height": 70,
+            "pos_x": 455,
+            "pos_y": 5,
+            "terminais": [
+                "33201338",
+                "17201204",
+                "99200087"
+            ]
+        },
+        {
+            "id": "P06",
+            "nome": "Prensa Manual 6",
+            "localizacao": "Setor de Prensas Manuais",
+            "terminal": "17201204",
+            "width": 120,
+            "height": 70,
+            "pos_x": 457,
+            "pos_y": 151,
+            "terminais": [
+                "33201339",
+                "10752999",
+                "27200206"
+            ]
+        },
+        {
+            "id": "P07",
+            "nome": "Prensa Manual 7",
+            "localizacao": "Setor de Prensas Manuais",
+            "terminal": "33201338",
+            "width": 120,
+            "height": 70,
+            "pos_x": 3,
+            "pos_y": 220,
+            "terminais": [
+                "99200086",
+                "10031116",
+                "99200444"
+            ]
+        },
+        {
+            "id": "P08",
+            "nome": "Prensa Manual 8",
+            "localizacao": "Setor de Prensas Manuais",
+            "terminal": "17201501",
+            "width": 120,
+            "height": 70,
+            "pos_x": 4,
+            "pos_y": 77,
+            "terminais": [
+                "10918503",
+                "10084731",
+                "27200211"
+            ]
+        },
+        {
+            "id": "P09",
+            "nome": "Prensa Manual 9",
+            "localizacao": "Setor de Prensas Manuais",
+            "terminal": "33201339",
+            "width": 120,
+            "height": 70,
+            "pos_x": 459,
+            "pos_y": 223,
+            "terminais": [
+                "17201501",
+                "17201473",
+                "10914014"
+            ]
+        },
+        {
+            "id": "P10",
+            "nome": "Prensa Manual 10",
+            "localizacao": "Setor de Prensas Manuais",
+            "terminal": "99200976",
+            "width": 120,
+            "height": 70,
+            "pos_x": 4,
+            "pos_y": 291,
+            "terminais": [
+                "10371120",
+                "11723885",
+                "11736515"
+            ]
+        },
+        {
+            "id": "P11",
+            "nome": "Prensa Manual 11",
+            "localizacao": "Setor de Prensas Manuais",
+            "terminal": "10084731",
+            "width": 120,
+            "height": 70,
+            "pos_x": 460,
+            "pos_y": 295,
+            "terminais": [
+                "10976526",
+                "27200208",
+                "10918502"
+            ]
+        },
+        {
+            "id": "P12",
+            "nome": "Prensa Manual 12",
+            "localizacao": "Setor de Prensas Manuais",
+            "terminal": "99200085",
+            "width": 120,
+            "height": 70,
+            "pos_x": 460,
+            "pos_y": 368,
+            "terminais": [
+                "10753027",
+                "17201502",
+                "99200276"
+            ]
+        },
+        {
+            "id": "P13",
+            "nome": "Prensa Manual 13",
+            "localizacao": "Setor de Prensas Manuais",
+            "terminal": "17201866",
+            "width": 120,
+            "height": 70,
+            "pos_x": 460,
+            "pos_y": 513,
+            "terminais": [
+                "11566710",
+                "11621809",
+                "10100072"
+            ]
+        },
+        {
+            "id": "P14",
+            "nome": "Prensa Manual 14",
+            "localizacao": "Setor de Prensas Manuais",
+            "terminal": "27200208",
+            "width": 120,
+            "height": 70,
+            "pos_x": 3,
+            "pos_y": 433,
+            "terminais": [
+                "10918500",
+                "10465490",
+                "10753047"
+            ]
+        },
+        {
+            "id": "P15",
+            "nome": "Prensa Manual 15",
+            "localizacao": "Setor de Prensas Manuais",
+            "terminal": "99200441",
+            "width": 120,
+            "height": 70,
+            "pos_x": 3,
+            "pos_y": 362,
+            "terminais": [
+                "37201044",
+                "99200275",
+                "10753036"
+            ]
+        },
+        {
+            "id": "P16",
+            "nome": "Prensa Manual 16",
+            "localizacao": "Setor de Prensas Manuais",
+            "terminal": "17201204",
+            "width": 120,
+            "height": 70,
+            "pos_x": 460,
+            "pos_y": 441,
+            "terminais": [
+                "27202542",
+                "17201866",
+                "10911130"
+            ]
+        },
+        {
+            "id": "P17",
+            "nome": "Prensa Manual 17",
+            "localizacao": "Setor de Prensas Manuais",
+            "terminal": "26201060",
+            "width": 120,
+            "height": 70,
+            "pos_x": 341,
+            "pos_y": 651,
+            "terminais": [
+                "98200410",
+                "26200161",
+                "10417366"
+            ]
+        },
+        {
+            "id": "P18",
+            "nome": "Prensa Manual 18",
+            "localizacao": "Setor de Prensas Manuais",
+            "terminal": "10465490",
+            "width": 120,
+            "height": 70,
+            "pos_x": 123,
+            "pos_y": 650,
+            "terminais": [
+                "12633323",
+                "11622062",
+                "99200341"
+            ]
+        },
+        {
+            "id": "P19",
+            "nome": "Prensa Manual 19",
+            "localizacao": "Setor de Prensas Manuais",
+            "terminal": "27200211",
+            "width": 120,
+            "height": 70,
+            "pos_x": 461,
+            "pos_y": 584,
+            "terminais": [
+                "11621802",
+                "10842861",
+                "26201060"
+            ]
+        },
+        {
+            "id": "P20",
+            "nome": "Prensa Manual 20",
+            "localizacao": "Setor de Prensas Manuais",
+            "terminal": "98200403",
+            "width": 120,
+            "height": 70,
+            "pos_x": 3,
+            "pos_y": 505,
+            "terminais": [
+                "99200342",
+                "10008041",
+                "10918488"
+            ]
+        }
+    ]
+}
