@@ -27,32 +27,33 @@ class QRCodeViewer(QtWidgets.QWidget):
         
         self.load_prensas()
         self.load_cabos()
+        self.load_gamepad_keys()
         self.init_ui()
     
     def init_ui(self):
         layout = QtWidgets.QVBoxLayout(self)
         layout.setSpacing(2)
-        layout.setContentsMargins(2, 2, 2, 2)
+        layout.setContentsMargins(20, 2, 20, 2)
         
         # Cabeçalho e Input na mesma linha
         top_frame = QtWidgets.QFrame()
         top_frame.setStyleSheet("background-color: rgb(40, 40, 50); border-radius: 3px;")
-        top_frame.setFixedHeight(35)
+        top_frame.setFixedHeight(40)
         top_layout = QtWidgets.QHBoxLayout(top_frame)
-        top_layout.setSpacing(3)
+        top_layout.setSpacing(5)
         
         header = QtWidgets.QLabel("QR Code")
-        header.setStyleSheet("font-size: 12px; font-weight: bold;")
+        header.setStyleSheet("font-size: 16px; font-weight: bold;")
         top_layout.addWidget(header)
         
         self.input_qr = QtWidgets.QLineEdit()
         self.input_qr.setPlaceholderText("ID...")
-        self.input_qr.setStyleSheet("font-size: 12px; padding: 1px; background-color: rgb(50, 50, 60); border: none; border-radius: 3px;")
+        self.input_qr.setStyleSheet("font-size: 16px; padding: 3px; background-color: rgb(50, 50, 60); border: none; border-radius: 3px;")
         self.input_qr.returnPressed.connect(self.processar_qr_e_focar)
         top_layout.addWidget(self.input_qr)
         
         btn_ler = QtWidgets.QPushButton("Ler")
-        btn_ler.setStyleSheet("font-size: 12px; padding: 1px 8px; background-color: rgb(69, 207, 81); border-radius: 3px; font-weight: bold;")
+        btn_ler.setStyleSheet("font-size: 16px; padding: 3px 12px; background-color: rgb(69, 207, 81); border-radius: 3px; font-weight: bold;")
         btn_ler.clicked.connect(self.processar_qr)
         top_layout.addWidget(btn_ler)
         
@@ -60,7 +61,7 @@ class QRCodeViewer(QtWidgets.QWidget):
         
         # Info QR
         self.info_label = QtWidgets.QLabel("")
-        self.info_label.setStyleSheet("font-size: 11px; padding: 3px; background-color: rgb(50, 50, 60); border-radius: 3px;")
+        self.info_label.setStyleSheet("font-size: 14px; padding: 5px; background-color: rgb(50, 50, 60); border-radius: 3px;")
         self.info_label.setAlignment(Qt.AlignCenter)
         self.info_label.hide()
         layout.addWidget(self.info_label)
@@ -72,8 +73,8 @@ class QRCodeViewer(QtWidgets.QWidget):
         
         self.aplicacoes_widget = QtWidgets.QWidget()
         self.aplicacoes_layout = QtWidgets.QVBoxLayout(self.aplicacoes_widget)
-        self.aplicacoes_layout.setSpacing(5)
-        self.aplicacoes_layout.setContentsMargins(3, 3, 3, 3)
+        self.aplicacoes_layout.setSpacing(8)
+        self.aplicacoes_layout.setContentsMargins(5, 5, 5, 5)
         
         scroll.setWidget(self.aplicacoes_widget)
         layout.addWidget(scroll)
@@ -96,6 +97,16 @@ class QRCodeViewer(QtWidgets.QWidget):
             with open('cabos_config.json', 'r', encoding='utf-8') as f:
                 config = json.load(f)
                 self.cabos_dict = config.get('cabos', {})
+        except:
+            pass
+    
+    def load_gamepad_keys(self):
+        self.gamepad_keys = {'up': [], 'down': [], 'left': [], 'right': [], 'enter': [], 'focus_input': []}
+        if not os.path.exists('gamepad_keys.json'):
+            return
+        try:
+            with open('gamepad_keys.json', 'r', encoding='utf-8') as f:
+                self.gamepad_keys = json.load(f)
         except:
             pass
     
@@ -233,13 +244,13 @@ class QRCodeViewer(QtWidgets.QWidget):
             prensa_nome = self.prensas_info.get(prensa_id, '')
             titulo = f"▶ {prensa_id} - {prensa_nome}" if prensa_nome else f"▶ {prensa_id}"
             titulo_label = QtWidgets.QLabel(titulo)
-            titulo_label.setStyleSheet("color: rgb(69, 207, 81); font-weight: bold; font-size: 16px; background: transparent; border: none;")
+            titulo_label.setStyleSheet("color: rgb(69, 207, 81); font-weight: bold; font-size: 20px; background: transparent; border: none;")
             prensa_layout.addWidget(titulo_label)
             
             # Container de detalhes
             detalhes_widget = QtWidgets.QWidget()
             detalhes_layout = QtWidgets.QVBoxLayout(detalhes_widget)
-            detalhes_layout.setSpacing(2)
+            detalhes_layout.setSpacing(3)
             detalhes_layout.setContentsMargins(0, 0, 0, 0)
             self.prensa_widgets.append(detalhes_widget)
             
@@ -250,15 +261,31 @@ class QRCodeViewer(QtWidgets.QWidget):
                     terminais_dict[terminal] = []
                 terminais_dict[terminal].append((cabo, qtd))
             
+            terminal_index = 0
+            total_terminais = len(terminais_dict)
+            
             for terminal, cabos_list in terminais_dict.items():
                 total_terminal = sum(qtd for _, qtd in cabos_list)
                 
-                # Terminal
-                terminal_label = QtWidgets.QLabel(f"  {total_terminal}x {terminal}")
-                terminal_label.setStyleSheet("color: white; font-weight: bold; font-size: 14px; padding: 2px;")
-                detalhes_layout.addWidget(terminal_label)
+                # Layout horizontal: terminal à esquerda, cabos à direita
+                grupo_widget = QtWidgets.QWidget()
+                grupo_layout = QtWidgets.QHBoxLayout(grupo_widget)
+                grupo_layout.setSpacing(10)
+                grupo_layout.setContentsMargins(0, 0, 0, 0)
                 
-                # Cabos
+                # Terminal centralizado verticalmente
+                terminal_label = QtWidgets.QLabel(f"{total_terminal}x {terminal}")
+                terminal_label.setStyleSheet("color: white; font-weight: bold; font-size: 18px; padding: 3px;")
+                terminal_label.setAlignment(Qt.AlignCenter)
+                terminal_label.setFixedWidth(120)
+                grupo_layout.addWidget(terminal_label)
+                
+                # Container de cabos
+                cabos_widget = QtWidgets.QWidget()
+                cabos_layout = QtWidgets.QVBoxLayout(cabos_widget)
+                cabos_layout.setSpacing(2)
+                cabos_layout.setContentsMargins(0, 0, 0, 0)
+                
                 for cabo, qtd in cabos_list:
                     cabo_desc = self.cabos_dict.get(cabo, cabo) if cabo else "Cabo desconhecido"
                     
@@ -284,13 +311,25 @@ class QRCodeViewer(QtWidgets.QWidget):
                         elif "branco" in cabo_lower:
                             cor_html = "#EEEEEE"
                         elif "cinza" in cabo_lower:
-                            cor_html = "#999999"
+                            cor_html = "#999999" 
                         elif "rosa" in cabo_lower:
                             cor_html = "#FF99CC"
                     
-                    cabo_label = QtWidgets.QLabel(f'    <span style="color: {cor_html}; font-weight: bold; font-size: 14px;">●</span> {qtd}x {cabo_desc}')
-                    cabo_label.setStyleSheet("color: rgb(200, 200, 200); font-size: 12px; padding: 1px;")
-                    detalhes_layout.addWidget(cabo_label)
+                    cabo_label = QtWidgets.QLabel(f'<span style="color: {cor_html}; font-weight: bold; font-size: 18px;">●</span> {qtd}x {cabo_desc}')
+                    cabo_label.setStyleSheet("color: rgb(200, 200, 200); font-size: 16px; padding: 2px;")
+                    cabos_layout.addWidget(cabo_label)
+                
+                grupo_layout.addWidget(cabos_widget)
+                grupo_layout.addStretch()
+                detalhes_layout.addWidget(grupo_widget)
+                
+                # Separador entre terminais (exceto no último)
+                terminal_index += 1
+                if total_terminais > 1 and terminal_index < total_terminais:
+                    separador = QtWidgets.QFrame()
+                    separador.setFrameShape(QtWidgets.QFrame.HLine)
+                    separador.setStyleSheet("background-color: rgb(80, 80, 90); max-height: 1px;")
+                    detalhes_layout.addWidget(separador)
             
             prensa_layout.addWidget(detalhes_widget)
             self.aplicacoes_layout.addWidget(prensa_frame)
@@ -301,21 +340,39 @@ class QRCodeViewer(QtWidgets.QWidget):
             self.atualizar_selecao()
     
     def keyPressEvent(self, event):
+        print(f"Tecla: {event.key()}")
+        
+        key = event.key()
+        
+        # Focus Input
+        if key in [Qt.Key_Escape] + self.gamepad_keys.get('focus_input', []):
+            self.input_qr.setFocus()
+            return
+        
+        # Enter
+        if key in [Qt.Key_Return, Qt.Key_Enter] + self.gamepad_keys.get('enter', []):
+            if self.input_qr.hasFocus():
+                self.processar_qr_e_focar()
+            return
+        
         if not self.prensa_frames:
             return
         
-        # Setas do teclado/gamepad
-        if event.key() == Qt.Key_Down or event.key() == Qt.Key_S or event.key() == Qt.Key_VolumeDown:
+        # Down
+        if key in [Qt.Key_Down, Qt.Key_S, Qt.Key_VolumeDown, 16777238] + self.gamepad_keys.get('down', []):
             if self.current_index < len(self.prensa_frames) - 1:
                 self.current_index += 1
                 self.atualizar_selecao()
-        elif event.key() == Qt.Key_Up or event.key() == Qt.Key_W or event.key() == Qt.Key_VolumeUp:
+        # Up
+        elif key in [Qt.Key_Up, Qt.Key_W, Qt.Key_VolumeUp, 16777237] + self.gamepad_keys.get('up', []):
             if self.current_index > 0:
                 self.current_index -= 1
                 self.atualizar_selecao()
-        elif event.key() == Qt.Key_Right or event.key() == Qt.Key_D or event.key() == Qt.Key_Space or event.key() == Qt.Key_MediaNext:
+        # Right
+        elif key in [Qt.Key_Right, Qt.Key_D, Qt.Key_Space, Qt.Key_MediaNext, 16777236] + self.gamepad_keys.get('right', []):
             self.marcar_completo()
-        elif event.key() == Qt.Key_Left or event.key() == Qt.Key_A or event.key() == Qt.Key_Backspace or event.key() == Qt.Key_MediaPrevious:
+        # Left
+        elif key in [Qt.Key_Left, Qt.Key_A, Qt.Key_Backspace, Qt.Key_MediaPrevious, 16777234] + self.gamepad_keys.get('left', []):
             self.desmarcar_completo()
     
     def atualizar_selecao(self):
