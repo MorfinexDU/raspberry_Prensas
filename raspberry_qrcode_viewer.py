@@ -454,8 +454,7 @@ class QRCodeViewer(QtWidgets.QWidget):
         # Verificar se todos foram completados
         if len(self.completed_frames) == len(self.prensa_frames):
             self.atualizar_selecao()
-            reply = QtWidgets.QMessageBox.question(self, "Finalizar Maço", "Deseja finalizar o maço?", QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.No)
-            if reply == QtWidgets.QMessageBox.Yes:
+            if self.show_finalizar_dialog():
                 self.limpar_e_focar()
         elif self.current_index < len(self.prensa_frames) - 1:
             self.current_index += 1
@@ -463,6 +462,75 @@ class QRCodeViewer(QtWidgets.QWidget):
             QtCore.QTimer.singleShot(50, lambda: self.scroll_area.ensureWidgetVisible(self.prensa_frames[self.current_index], 0, 0))
         else:
             self.atualizar_selecao()
+    
+    def show_finalizar_dialog(self):
+        dialog = QtWidgets.QDialog(self)
+        dialog.setWindowTitle("Finalizar Maço")
+        dialog.setStyleSheet("background-color: rgb(25, 25, 40); color: white;")
+        dialog.setModal(True)
+        
+        layout = QtWidgets.QVBoxLayout(dialog)
+        layout.setSpacing(20)
+        layout.setContentsMargins(30, 30, 30, 30)
+        
+        label = QtWidgets.QLabel("Deseja finalizar o maço?")
+        label.setStyleSheet("font-size: 18px; font-weight: bold;")
+        label.setAlignment(Qt.AlignCenter)
+        label.setFocusPolicy(Qt.StrongFocus)
+        layout.addWidget(label)
+        
+        btn_layout = QtWidgets.QHBoxLayout()
+        btn_layout.setSpacing(10)
+        
+        btn_yes = QtWidgets.QPushButton("Sim")
+        btn_yes.setStyleSheet("font-size: 16px; padding: 10px 20px; background-color: rgb(69, 207, 81); border-radius: 5px;")
+        btn_yes.clicked.connect(dialog.accept)
+        btn_yes.setAutoDefault(False)
+        btn_yes.setFocusPolicy(Qt.NoFocus)
+        btn_layout.addWidget(btn_yes)
+        
+        btn_no = QtWidgets.QPushButton("Não")
+        btn_no.setStyleSheet("font-size: 16px; padding: 10px 20px; background-color: rgb(150, 50, 50); border-radius: 5px;")
+        btn_no.clicked.connect(dialog.reject)
+        btn_no.setAutoDefault(False)
+        btn_no.setFocusPolicy(Qt.NoFocus)
+        btn_layout.addWidget(btn_no)
+        
+        layout.addLayout(btn_layout)
+        
+        # Focar no label para evitar foco nos botões
+        label.setFocus()
+        
+        dialog.result_value = None
+        
+        class DialogEventFilter(QtCore.QObject):
+            def __init__(self, parent_widget):
+                super().__init__()
+                self.parent_widget = parent_widget
+            
+            def eventFilter(self, obj, event):
+                if event.type() == QtCore.QEvent.KeyPress:
+                    key = event.key()
+                    print(f"EventFilter tecla: {key} | Enter keys: {self.parent_widget.gamepad_keys.get('enter', [])} | Focus keys: {self.parent_widget.gamepad_keys.get('focus_input', [])}")
+                    if key in self.parent_widget.gamepad_keys.get('enter', []):
+                        print("ENTER detectado - Aceitando")
+                        dialog.result_value = True
+                        dialog.accept()
+                        return True
+                    elif key in self.parent_widget.gamepad_keys.get('focus_input', []):
+                        print("FOCUS_INPUT detectado - Rejeitando")
+                        dialog.result_value = False
+                        dialog.reject()
+                        return True
+                return False
+        
+        event_filter = DialogEventFilter(self)
+        dialog.installEventFilter(event_filter)
+        
+        result = dialog.exec_()
+        if dialog.result_value is not None:
+            return dialog.result_value
+        return result == QtWidgets.QDialog.Accepted
     
     def desmarcar_completo(self):
         if self.current_index in self.completed_frames:
